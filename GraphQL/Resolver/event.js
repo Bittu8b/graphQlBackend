@@ -1,7 +1,7 @@
-const Event = require("../../Models/event");
-const { dateToString } = require("../../helpers/date");
-const { transformEvent } = require("./merge");
-const User = require("../../Models/user");
+const Event = require('../../Models/event');
+const { dateToString } = require('../../helpers/date');
+const { transformEvent } = require('./merge');
+const User = require('../../Models/user');
 
 module.exports = {
   events: async (_, req) => {
@@ -21,7 +21,7 @@ module.exports = {
 
   createEvents: async (args, req) => {
     if (!req.isAuth) {
-      throw new Error("Unauthenticated!!!");
+      throw new Error('Unauthenticated!!!');
     }
 
     const event = new Event({
@@ -42,7 +42,7 @@ module.exports = {
       // return { ...result._doc };
 
       if (!user) {
-        throw new Error("User not found...");
+        throw new Error('User not found...');
       }
       user.createdEvents.push(event);
       await user.save();
@@ -50,6 +50,23 @@ module.exports = {
       return createdEvent;
     } catch (err) {
       throw err;
+    }
+  },
+  deleteEvent: async (args, req) => {
+    // if (!req.isAuth) {
+    //   return { status: 'Unauthenticated' };
+    // }
+
+    try {
+      const event = await Event.findByIdAndDelete({ _id: args.eventId });
+      return (
+        event === null
+          ? { status: 'There is no such event' }
+          : { status: 'Deleted Successfully' },
+        event
+      );
+    } catch (err) {
+      return { erro: err };
     }
   }
 };
