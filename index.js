@@ -16,6 +16,10 @@ app.use(bodyParser.json());
 
 app.use(isAuth);
 
+app.get("/",(req,res)=>{
+  res.json({status:"HI"})
+});
+
 app.get('/', (req, res) => {
   res.json({ status: 'You have reached to home' });
 });
